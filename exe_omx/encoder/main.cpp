@@ -376,10 +376,8 @@ static void parseCommandLine(int argc, char** argv, Application& app)
   opt.addFlag("--hevc", &settings.codec, "Use the default hevc encoder", Codec::HEVC);
   opt.addFlag("--avc", &settings.codec, "Use the default avc encoder", Codec::AVC);
 
-#if AL_ENABLE_RISCV
   opt.addFlag("--hevc-riscv", &settings.codec, "Use riscv hevc encoder", Codec::HEVC_RISCV);
   opt.addFlag("--avc-riscv", &settings.codec, "Use riscv avc encoder", Codec::AVC_RISCV);
-#endif
 
   opt.addFlag("--dma-in", &app.input.isDMA, "Use dmabufs on input port");
   opt.addFlag("--dma-out", &app.output.isDMA, "Use dmabufs on output port");
@@ -432,21 +430,17 @@ static void parseCommandLine(int argc, char** argv, Application& app)
     case Codec::AVC:
       output_file = "output.hardware.h264";
       break;
-#if AL_ENABLE_RISCV
     case Codec::AVC_RISCV:
       output_file = "output.riscv.h264";
       break;
-#endif
 
     case Codec::HEVC:
       output_file = "output.hardware.h265";
       break;
 
-#if AL_ENABLE_RISCV
     case Codec::HEVC_RISCV:
       output_file = "output.riscv.h265";
       break;
-#endif
 
     default:
       assert(0);
@@ -735,17 +729,13 @@ static string chooseComponent(Codec codec)
   {
   case Codec::AVC:
     return "OMX.allegro.h264.encoder";
-#if AL_ENABLE_RISCV
   case Codec::AVC_RISCV:
     return "OMX.allegro.h264.riscv.encoder";
-#endif
 
   case Codec::HEVC:
     return "OMX.allegro.h265.encoder";
-#if AL_ENABLE_RISCV
   case Codec::HEVC_RISCV:
     return "OMX.allegro.h265.riscv.encoder";
-#endif
 
   default:
     assert(0);

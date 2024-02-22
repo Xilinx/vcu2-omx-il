@@ -22,14 +22,12 @@ static omx_comp_type AL_COMP_LIST[] =
     "libOMX.allegro.video_encoder.so",
     "video_encoder.hevc",
   },
-#if AL_ENABLE_RISCV
   {
     "OMX.allegro.h265.riscv.encoder",
     nullptr,
     "libOMX.allegro.video_encoder.so",
     "video_encoder.hevc",
   },
-#endif
 
   {
     "OMX.allegro.h264.encoder",
@@ -37,14 +35,12 @@ static omx_comp_type AL_COMP_LIST[] =
     "libOMX.allegro.video_encoder.so",
     "video_encoder.avc",
   },
-#if AL_ENABLE_RISCV
   {
     "OMX.allegro.h264.riscv.encoder",
     nullptr,
     "libOMX.allegro.video_encoder.so",
     "video_encoder.avc",
   },
-#endif
 
   {
     "OMX.allegro.h265.decoder",
@@ -52,14 +48,12 @@ static omx_comp_type AL_COMP_LIST[] =
     "libOMX.allegro.video_decoder.so",
     "video_decoder.hevc",
   },
-#if AL_ENABLE_RISCV
   {
     "OMX.allegro.h265.riscv.decoder",
     nullptr,
     "libOMX.allegro.video_decoder.so",
     "video_decoder.hevc",
   },
-#endif
 
   {
     "OMX.allegro.h264.decoder",
@@ -67,14 +61,12 @@ static omx_comp_type AL_COMP_LIST[] =
     "libOMX.allegro.video_decoder.so",
     "video_decoder.avc",
   },
-#if AL_ENABLE_RISCV
   {
     "OMX.allegro.h264.riscv.decoder",
     nullptr,
     "libOMX.allegro.video_decoder.so",
     "video_decoder.avc",
   },
-#endif
 
   {
     "OMX.allegro.mjpeg.decoder",
@@ -82,13 +74,11 @@ static omx_comp_type AL_COMP_LIST[] =
     "libOMX.allegro.video_decoder.so",
     "video_decoder.mjpeg",
   },
-#if AL_ENABLE_RISCV
   {
     "OMX.allegro.mjpeg.riscv.decoder",
     nullptr,
     "libOMX.allegro.video_decoder.so",
     "video_decoder.mjpeg",
   },
-#endif
 
 };

@@ -287,11 +287,9 @@ void parseCommandLine(int argc, char** argv, Application& app)
   opt.addFlag("--avc,-avc", &settings.codecImplem, "load AVC decoder", Codec::AVC);
   opt.addFlag("--mjpeg,-mjpeg", &settings.codecImplem, "load MJPEG decoder", Codec::MJPEG);
 
-#if AL_ENABLE_RISCV
   opt.addFlag("--hevc-riscv,-hevc-riscv", &settings.codecImplem, "Use riscv hevc decoder", Codec::HEVC_RISCV);
   opt.addFlag("--avc-riscv,-avc-riscv", &settings.codecImplem, "Use riscv avc decoder", Codec::AVC_RISCV);
   opt.addFlag("--mjpeg-riscv,-mjpeg-riscv", &settings.codecImplem, "Use riscv mjpeg decoder", Codec::MJPEG_RISCV);
-#endif
 
   opt.addString("--out,-o", &output_file, "Output compressed file name");
   opt.addOption("--dma-in,-dma-in", [&](string) {
@@ -330,14 +328,11 @@ void parseCommandLine(int argc, char** argv, Application& app)
   if(settings.codecImplem == Codec::MJPEG)
     codec = Codec::MJPEG;
 
-#if AL_ENABLE_RISCV
-
   if(settings.codecImplem == Codec::AVC_RISCV)
     codec = Codec::AVC;
 
   if(settings.codecImplem == Codec::MJPEG_RISCV)
     codec = Codec::MJPEG;
-#endif
 
   settings.codec = codec;
 
@@ -731,24 +726,18 @@ string chooseComponent(Codec codecImplem)
   {
   case Codec::AVC:
     return "OMX.allegro.h264.decoder";
-#if AL_ENABLE_RISCV
   case Codec::AVC_RISCV:
     return "OMX.allegro.h264.riscv.decoder";
-#endif
 
   case Codec::MJPEG:
     return "OMX.allegro.mjpeg.decoder";
-#if AL_ENABLE_RISCV
   case Codec::MJPEG_RISCV:
     return "OMX.allegro.mjpeg.riscv.decoder";
-#endif
 
   case Codec::HEVC:
     return "OMX.allegro.h265.decoder";
-#if AL_ENABLE_RISCV
   case Codec::HEVC_RISCV:
     return "OMX.allegro.h265.riscv.decoder";
-#endif
 
   default:
     assert(0);

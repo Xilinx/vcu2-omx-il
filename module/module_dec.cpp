@@ -357,12 +357,9 @@ ModuleInterface::ErrorType DecModule::CreateDecoder(bool shouldPrealloc)
 
   auto scheduler = device->Init();
 
-#if AL_ENABLE_RISCV
-
   if(device->GetDeviceContext())
     errorCode = AL_Decoder_CreateWithCtx(&decoder, device->GetDeviceContext(), allocator.get(), &media->settings, &decCallbacks);
   else
-#endif
   errorCode = AL_Decoder_Create(&decoder, scheduler, allocator.get(), &media->settings, &decCallbacks);
 
   if(AL_IS_ERROR_CODE(errorCode))

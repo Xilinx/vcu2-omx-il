@@ -214,12 +214,10 @@ ModuleInterface::ErrorType EncModule::CreateEncoder()
     }
 
     AL_ERR errorCode;
-#if AL_ENABLE_RISCV
 
     if(device->GetDeviceContext())
       errorCode = AL_Encoder_CreateWithCtx(&encoderPass.enc, device->GetDeviceContext(), allocator.get(), &settingsPass, callback);
     else
-#endif
     errorCode = AL_Encoder_Create(&encoderPass.enc, scheduler, allocator.get(), &settingsPass, callback);
 
     if(AL_IS_ERROR_CODE(errorCode))

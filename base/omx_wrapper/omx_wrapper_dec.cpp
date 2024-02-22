@@ -6,9 +6,7 @@
 #include "module/settings_dec_hevc.h"
 #include "module/module_dec.h"
 
-#if AL_ENABLE_RISCV
 #include "module/device_dec_hardware_riscv.h"
-#endif
 
 #include <utility>
 #include <cstring>
@@ -23,7 +21,11 @@ extern "C"
 #include <lib_fpga/DmaAlloc.h>
 }
 
-#if AL_ENABLE_RISCV
+static StrideAlignments constexpr STRIDE_ALIGNMENTS_HARDWARE
+{
+  64, 64
+};
+
 static char const* RISCV_DEVICE_DEC_NAME()
 {
   if(getenv("ALLEGRO_RISCV_DEC_DEVICE_PATH"))
@@ -31,12 +33,9 @@ static char const* RISCV_DEVICE_DEC_NAME()
   return "/dev/al_d3xx";
 }
 
-#endif
-
 #include "base/omx_component/omx_expertise_avc.h"
 #include "module/settings_dec_avc.h"
 
-#if AL_ENABLE_RISCV
 static DecComponent* GenerateAvcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_STRING cComponentName, OMX_STRING cRole, OMX_ALG_COREINDEXTYPE nCoreParamIndex, OMX_PTR pSettings)
 {
   (void)nCoreParamIndex;
@@ -78,11 +77,8 @@ static DecComponent* GenerateAvcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_ST
   };
 }
 
-#endif
-
 #include "module/settings_dec_mjpeg.h"
 
-#if AL_ENABLE_RISCV
 static DecComponent* GenerateJpegComponentRiscV(OMX_HANDLETYPE hComponent, OMX_STRING cComponentName, OMX_STRING cRole, OMX_ALG_COREINDEXTYPE nCoreParamIndex, OMX_PTR pSettings)
 {
   (void)nCoreParamIndex;
@@ -121,9 +117,6 @@ static DecComponent* GenerateJpegComponentRiscV(OMX_HANDLETYPE hComponent, OMX_S
   };
 }
 
-#endif
-
-#if AL_ENABLE_RISCV
 static DecComponent* GenerateHevcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_STRING cComponentName, OMX_STRING cRole, OMX_ALG_COREINDEXTYPE nCoreParamIndex, OMX_PTR pSettings)
 {
   (void)nCoreParamIndex;
@@ -164,25 +157,17 @@ static DecComponent* GenerateHevcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_S
   };
 }
 
-#endif
-
 static OMX_PTR GenerateDefaultComponent(OMX_IN OMX_HANDLETYPE hComponent, OMX_IN OMX_STRING cComponentName, OMX_IN OMX_STRING cRole, OMX_IN OMX_ALG_COREINDEXTYPE nCoreParamIndex, OMX_IN OMX_PTR pSettings)
 {
-#if AL_ENABLE_RISCV
 
   if(!strncmp(cComponentName, "OMX.allegro.h265.riscv.decoder", strlen(cComponentName)))
     return GenerateHevcComponentRiscV(hComponent, cComponentName, cRole, nCoreParamIndex, pSettings);
-#endif
-#if AL_ENABLE_RISCV
 
   if(!strncmp(cComponentName, "OMX.allegro.h264.riscv.decoder", strlen(cComponentName)))
     return GenerateAvcComponentRiscV(hComponent, cComponentName, cRole, nCoreParamIndex, pSettings);
-#endif
-#if AL_ENABLE_RISCV
 
   if(!strncmp(cComponentName, "OMX.allegro.mjpeg.riscv.decoder", strlen(cComponentName)))
     return GenerateJpegComponentRiscV(hComponent, cComponentName, cRole, nCoreParamIndex, pSettings);
-#endif
   return nullptr;
 }
 

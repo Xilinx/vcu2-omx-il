@@ -12,9 +12,7 @@
 #include "module/dma_memory.h"
 #endif
 
-#if AL_ENABLE_RISCV
 #include "module/device_enc_hardware_riscv.h"
-#endif
 
 #include <cstring>
 #include <memory>
@@ -58,8 +56,6 @@ static MemoryInterface* createMemory()
 #endif
 }
 
-#if AL_ENABLE_RISCV
-
 static char const* RISCV_DEVICE_ENC_NAME()
 {
   if(getenv("ALLEGRO_RISCV_ENC_DEVICE_PATH"))
@@ -67,12 +63,9 @@ static char const* RISCV_DEVICE_ENC_NAME()
   return "/dev/al_e2xx";
 }
 
-#endif
-
 #include "base/omx_component/omx_expertise_avc.h"
 #include "module/settings_enc_avc.h"
 
-#if AL_ENABLE_RISCV
 static EncComponent* GenerateAvcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_STRING cComponentName, OMX_STRING cRole, OMX_ALG_COREINDEXTYPE nCoreParamIndex, OMX_PTR pSettings)
 {
   (void)nCoreParamIndex;
@@ -116,9 +109,6 @@ static EncComponent* GenerateAvcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_ST
   };
 }
 
-#endif
-
-#if AL_ENABLE_RISCV
 static EncComponent* GenerateHevcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_STRING cComponentName, OMX_STRING cRole, OMX_ALG_COREINDEXTYPE nCoreParamIndex, OMX_PTR pSettings)
 {
   (void)nCoreParamIndex;
@@ -162,21 +152,14 @@ static EncComponent* GenerateHevcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_S
   };
 }
 
-#endif
-
 static OMX_PTR GenerateDefaultComponent(OMX_IN OMX_HANDLETYPE hComponent, OMX_IN OMX_STRING cComponentName, OMX_IN OMX_STRING cRole, OMX_IN OMX_ALG_COREINDEXTYPE nCoreParamIndex, OMX_IN OMX_PTR pSettings)
 {
-#if AL_ENABLE_RISCV
 
   if(!strncmp(cComponentName, "OMX.allegro.h265.riscv.encoder", strlen(cComponentName)))
     return GenerateHevcComponentRiscV(hComponent, cComponentName, cRole, nCoreParamIndex, pSettings);
-#endif
-
-#if AL_ENABLE_RISCV
 
   if(!strncmp(cComponentName, "OMX.allegro.h264.riscv.encoder", strlen(cComponentName)))
     return GenerateAvcComponentRiscV(hComponent, cComponentName, cRole, nCoreParamIndex, pSettings);
-#endif
   return nullptr;
 }
 
