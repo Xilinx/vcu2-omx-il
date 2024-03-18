@@ -47,6 +47,8 @@ extern "C"
 {
 #include <lib_fpga/DmaAlloc.h>
 #include <lib_fpga/DmaAllocLinux.h>
+#include <lib_common/Context.h>
+#include "lib_encode/LibEncoderRiscv.h"
 }
 
 #include "RCPlugin.h"
@@ -98,6 +100,8 @@ struct Application
   condition_variable cv;
   bool read;
   AL_TAllocator* pAllocator;
+
+  AL_RiscV_Ctx pRiscvContext;
 
   Ports input;
   Ports output;
@@ -802,10 +806,19 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
   OMX_CALL(showComponentVersion(&app.hEncoder));
 
   app.pAllocator = nullptr;
+  app.pRiscvContext = nullptr;
 
   if(app.input.isDMA || app.output.isDMA)
   {
-    app.pAllocator = AL_DmaAlloc_Create(app.settings.deviceName.c_str());
+
+    if(app.settings.codec == Codec::AVC_RISCV || app.settings.codec == Codec::HEVC_RISCV || app.settings.codec == Codec::MJPEG_RISCV )
+    {
+      app.pRiscvContext = AL_Riscv_Encode_CreateCtx(app.settings.deviceName.c_str());
+      app.pAllocator = AL_Riscv_Encode_DmaAlloc_Create(app.pRiscvContext);
+    }
+    else
+      app.pAllocator = AL_DmaAlloc_Create(app.settings.deviceName.c_str());
+
 
     if(!app.pAllocator)
       throw runtime_error(string("Couldn't create dma allocator (using ") + app.settings.deviceName + string(")"));
@@ -814,6 +827,8 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
   auto scopeAlloc = scopeExit([&]() {
     if(app.pAllocator)
       AL_Allocator_Destroy(app.pAllocator);
+    if(app.pRiscvContext)
+      AL_Riscv_Encode_DestroyCtx(app.pRiscvContext);
   });
 
   auto ret = setPortParameters(app);

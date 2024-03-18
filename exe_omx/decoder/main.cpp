@@ -42,6 +42,8 @@ extern "C"
 {
 #include "lib_fpga/DmaAlloc.h"
 #include "lib_fpga/DmaAllocLinux.h"
+#include <lib_common/Context.h>
+#include "lib_decode/LibDecoderRiscv.h"
 }
 
 using namespace std;
@@ -183,6 +185,7 @@ struct Application
   locked_queue<OMX_BUFFERHEADERTYPE*> inputBuffers;
   list<OMX_BUFFERHEADERTYPE*> outputBuffers;
   AL_TAllocator* pAllocator;
+  AL_RiscV_Ctx pRiscvContext;
   EventBus eventBus {};
   bool quit = false;
   bool pipelineEnded = false;
@@ -1121,9 +1124,17 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
 
   app.pAllocator = nullptr;
 
+  app.pRiscvContext = nullptr;
+
   if(app.settings.bDMAIn || app.settings.bDMAOut)
   {
-    app.pAllocator = AL_DmaAlloc_Create(app.settings.deviceName.c_str());
+    if(app.settings.codecImplem == Codec::AVC_RISCV || app.settings.codecImplem == Codec::HEVC_RISCV || app.settings.codecImplem == Codec::MJPEG_RISCV )
+    {
+      app.pRiscvContext = AL_Riscv_Decode_CreateCtx(app.settings.deviceName.c_str());
+      app.pAllocator = AL_Riscv_Decode_DmaAlloc_Create(app.pRiscvContext);
+    }
+    else
+      app.pAllocator = AL_DmaAlloc_Create(app.settings.deviceName.c_str());
 
     if(!app.pAllocator)
       throw runtime_error(string("Couldn't create dma allocator (using ") + app.settings.deviceName + string(")"));
@@ -1132,6 +1143,8 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
   auto scopeAlloc = scopeExit([&]() {
     if(app.pAllocator)
       AL_Allocator_Destroy(app.pAllocator);
+    if(app.pRiscvContext)
+      AL_Riscv_Decode_DestroyCtx(app.pRiscvContext);
   });
 
   thread omxThread(omxWorker, &app);
