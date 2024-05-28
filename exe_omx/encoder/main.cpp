@@ -147,6 +147,7 @@ static string cmd_file;
 static ifstream infile;
 static ofstream outfile;
 static int user_slice = 0;
+static OMX_BOOL isSrcSyncEnabled = OMX_FALSE;
 
 static OMX_PARAM_PORTDEFINITIONTYPE paramPort;
 
@@ -215,6 +216,12 @@ static OMX_ERRORTYPE setPortParameters(Application& app)
                           };
   OMX_CALL(PortSetup<OMX_ALG_PORT_PARAM_BUFFER_MODE>(app.hEncoder, static_cast<OMX_INDEXTYPE>(OMX_ALG_IndexPortParamBufferMode), updateBufferMode, 0));
   OMX_CALL(PortSetup<OMX_ALG_PORT_PARAM_BUFFER_MODE>(app.hEncoder, static_cast<OMX_INDEXTYPE>(OMX_ALG_IndexPortParamBufferMode), updateBufferMode, 1));
+
+  OMX_ALG_PORT_PARAM_SYNCHRONIZATION srcSync;
+  InitHeader(srcSync);
+  srcSync.nPortIndex = 0;
+  srcSync.bEnableSrcSynchronization = isSrcSyncEnabled;
+  OMX_SetParameter(app.hEncoder, static_cast<OMX_INDEXTYPE>(OMX_ALG_IndexPortParamSynchronization), &srcSync);
 
   if(user_slice)
   {
@@ -385,6 +392,7 @@ static void parseCommandLine(int argc, char** argv, Application& app)
 
   opt.addFlag("--dma-in", &app.input.isDMA, "Use dmabufs on input port");
   opt.addFlag("--dma-out", &app.output.isDMA, "Use dmabufs on output port");
+  opt.addFlag("--input-src-sync", &isSrcSyncEnabled, "Enable Input Src Sync");
   opt.addInt("--subframe", &user_slice, "<4 || 8 || 16>: activate subframe latency '(0)'");
   opt.addString("--cmd-file", &cmd_file, "File to precise for dynamic cmd");
   opt.addInt("--lookahead", &settings.lookahead, "<0 || above 2>: activate lookahead mode '(0)'");

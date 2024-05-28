@@ -565,6 +565,19 @@ bool UpdateAccessUnitDelimiter(AL_TEncSettings& settings, bool isAUDEnabled)
   return true;
 }
 
+bool CreateInputSynchronization(AL_TEncSettings settings)
+{
+  auto& channel = settings.tChParam[0];
+  return channel.bSrcSync;
+}
+
+bool UpdateInputSynchronization(AL_TEncSettings& settings, bool isSrcSyncEnabled)
+{
+  auto& channel = settings.tChParam[0];
+  channel.bSrcSync = isSrcSyncEnabled;
+  return true;
+}
+
 bool CreateBufferingPeriodSEI(AL_TEncSettings settings)
 {
   return (settings.uEnableSEI & AL_SEI_BP) != 0;

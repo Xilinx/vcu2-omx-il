@@ -423,6 +423,12 @@ SettingsInterface::ErrorType EncSettingsAVC::Get(std::string index, void* settin
     return SUCCESS;
   }
 
+  if(index == "SETTINGS_INDEX_INPUT_SYNCHRONIZATION")
+  {
+    *static_cast<bool*>(settings) = CreateInputSynchronization(this->settings);
+    return SUCCESS;
+  }
+
   if(index == "SETTINGS_INDEX_BUFFERING_PERIOD_SEI")
   {
     *static_cast<bool*>(settings) = CreateBufferingPeriodSEI(this->settings);
@@ -854,6 +860,15 @@ SettingsInterface::ErrorType EncSettingsAVC::Set(std::string index, void const* 
     auto aud = *(static_cast<bool const*>(settings));
 
     if(!UpdateAccessUnitDelimiter(this->settings, aud))
+      return BAD_PARAMETER;
+    return SUCCESS;
+  }
+
+  if(index == "SETTINGS_INDEX_INPUT_SYNCHRONIZATION")
+  {
+    auto srcSync = *(static_cast<bool const*>(settings));
+
+    if(!UpdateInputSynchronization(this->settings, srcSync))
       return BAD_PARAMETER;
     return SUCCESS;
   }

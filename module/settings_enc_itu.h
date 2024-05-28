@@ -83,6 +83,9 @@ bool UpdateLoopFilterTc(AL_TEncSettings& settings, int tc);
 bool CreateAccessUnitDelimiter(AL_TEncSettings settings);
 bool UpdateAccessUnitDelimiter(AL_TEncSettings& settings, bool isAUDEnabled);
 
+bool CreateInputSynchronization(AL_TEncSettings settings);
+bool UpdateInputSynchronization(AL_TEncSettings& settings, bool isSrcSyncEnabled);
+
 bool CreateBufferingPeriodSEI(AL_TEncSettings settings);
 bool UpdateBufferingPeriodSEI(AL_TEncSettings& settings, bool isBPEnabled);
 
