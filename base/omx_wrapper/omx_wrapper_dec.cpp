@@ -26,7 +26,6 @@ static StrideAlignments constexpr STRIDE_ALIGNMENTS_HARDWARE
   64, 64
 };
 
-
 static char const* RISCV_DEVICE_DEC_NAME()
 {
   if(getenv("ALLEGRO_RISCV_DEC_DEVICE_PATH"))

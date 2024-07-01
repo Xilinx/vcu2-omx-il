@@ -69,7 +69,7 @@ void EncSettingsHEVC::Reset()
   rateControl.uFrameRate = 15;
   auto& gopParam = channel.tGopParam;
   gopParam.bEnableLT = false;
-  settings.eEnableFillerData = AL_FILLER_ENC;
+  settings.eEnableFillerData = AL_FILLER_APP;
   settings.bEnableAUD = false;
   settings.LookAhead = 0;
   settings.TwoPass = 0;
@@ -528,6 +528,8 @@ static bool UpdateLoopFilter(AL_TEncSettings& settings, LoopFilterType loopFilte
     return false;
 
   auto& options = settings.tChParam[0].eEncTools;
+  //Clear options first to allow disable.
+  options = static_cast<AL_EChEncTool>(options & ~(AL_OPT_LF | AL_OPT_LF_X_TILE | AL_OPT_LF_X_SLICE));
   options = static_cast<AL_EChEncTool>(options | ConvertModuleToSoftLoopFilter(loopFilter));
 
   return true;

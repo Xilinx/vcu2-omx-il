@@ -819,14 +819,13 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
   if(app.input.isDMA || app.output.isDMA)
   {
 
-    if(app.settings.codec == Codec::AVC_RISCV || app.settings.codec == Codec::HEVC_RISCV || app.settings.codec == Codec::MJPEG_RISCV )
+    if(app.settings.codec == Codec::AVC_RISCV || app.settings.codec == Codec::HEVC_RISCV || app.settings.codec == Codec::MJPEG_RISCV)
     {
       app.pRiscvContext = AL_Riscv_Encode_CreateCtx(app.settings.deviceName.c_str());
       app.pAllocator = AL_Riscv_Encode_DmaAlloc_Create(app.pRiscvContext);
     }
     else
-      app.pAllocator = AL_DmaAlloc_Create(app.settings.deviceName.c_str());
-
+    app.pAllocator = AL_DmaAlloc_Create(app.settings.deviceName.c_str());
 
     if(!app.pAllocator)
       throw runtime_error(string("Couldn't create dma allocator (using ") + app.settings.deviceName + string(")"));
@@ -835,6 +834,7 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
   auto scopeAlloc = scopeExit([&]() {
     if(app.pAllocator)
       AL_Allocator_Destroy(app.pAllocator);
+
     if(app.pRiscvContext)
       AL_Riscv_Encode_DestroyCtx(app.pRiscvContext);
   });
