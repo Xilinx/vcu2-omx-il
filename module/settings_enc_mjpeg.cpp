@@ -65,7 +65,7 @@ void EncSettingsMJPEG::Reset()
   rateControl.uFrameRate = 15;
   auto& gopParam = channel.tGopParam;
   gopParam.bEnableLT = false;
-  settings.eEnableFillerData = AL_FILLER_ENC;
+  settings.eEnableFillerData = AL_FILLER_APP;
   settings.bEnableAUD = false;
   settings.LookAhead = 0;
   settings.TwoPass = 0;

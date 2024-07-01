@@ -87,7 +87,7 @@ public:
     curSection = sectionName;
   }
 
-  void startDeprecatedSection()
+  void startDeprecatedSection(void)
   {
     startSection(DEPRECATED_SECTION);
   }
@@ -128,31 +128,31 @@ public:
     return readVal<double>(word);
   }
 
-  int popInt()
+  int popInt(void)
   {
     auto word = popWord();
     return readInt(word);
   }
 
-  uint32_t popUint()
+  uint32_t popUint(void)
   {
     auto word = popWord();
     return readUint(word);
   }
 
-  AL_PADDR popPAddr()
+  AL_PADDR popPAddr(void)
   {
     auto word = popWord();
     return readVal<AL_PADDR>(word);
   }
 
-  double popDouble()
+  double popDouble(void)
   {
     auto word = popWord();
     return readDouble(word);
   }
 
-  std::string popWord()
+  std::string popWord(void)
   {
     if(words.empty())
       throw std::runtime_error("Unexpected end of command line, use -h to get help");
