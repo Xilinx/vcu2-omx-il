@@ -7,6 +7,7 @@
 #include "convert_module_soft.h"
 #include "convert_module_soft_enc.h"
 #include <utility/round.h>
+#include <cassert>
 
 extern "C"
 {
