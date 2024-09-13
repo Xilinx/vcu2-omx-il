@@ -12,6 +12,7 @@
 #include <cmath>
 #include <cstring> // memset
 #include <algorithm> // max
+#include <cassert>
 
 extern "C"
 {
