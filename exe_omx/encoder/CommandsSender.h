@@ -19,6 +19,7 @@ struct CommandsSender final : public ICommandsSender
   void notifyIsLongTerm() override;
   void notifyUseLongTerm() override;
   void notifyIsSkip() override;
+  virtual void setSAO(bool bSAOEnabled) override;
   void restartGop() override;
   void restartGopRecoveryPoint() override;
   void setGopLength(int gopLength) override;

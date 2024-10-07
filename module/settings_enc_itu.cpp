@@ -22,7 +22,7 @@ extern "C"
 
 using namespace std;
 
-Clock CreateClock(AL_TEncSettings settings)
+Clock CreateClock(AL_TEncSettings const& settings)
 {
   Clock clock;
   auto rateControl = settings.tChParam[0].tRCParam;
@@ -47,7 +47,7 @@ bool UpdateClock(AL_TEncSettings& settings, Clock clock)
   return true;
 }
 
-Gop CreateGroupOfPictures(AL_TEncSettings settings)
+Gop CreateGroupOfPictures(AL_TEncSettings const& settings)
 {
   Gop gop;
   auto gopParam = settings.tChParam[0].tGopParam;
@@ -93,7 +93,7 @@ bool UpdateGroupOfPictures(AL_TEncSettings& settings, Gop gop)
   return true;
 }
 
-bool CreateConstrainedIntraPrediction(AL_TEncSettings settings)
+bool CreateConstrainedIntraPrediction(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   return channel.eEncTools & AL_OPT_CONST_INTRA_PRED;
@@ -110,7 +110,7 @@ bool UpdateConstrainedIntraPrediction(AL_TEncSettings& settings, bool isConstrai
   return true;
 }
 
-VideoModeType CreateVideoMode(AL_TEncSettings settings)
+VideoModeType CreateVideoMode(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   return ConvertSoftToModuleVideoMode(channel.eVideoMode);
@@ -126,7 +126,7 @@ bool UpdateVideoMode(AL_TEncSettings& settings, VideoModeType videoMode)
   return true;
 }
 
-Bitrate CreateBitrate(AL_TEncSettings settings)
+Bitrate CreateBitrate(AL_TEncSettings const& settings)
 {
   Bitrate bitrate {};
   auto rateControl = settings.tChParam[0].tRCParam;
@@ -162,7 +162,7 @@ bool UpdateBitrate(AL_TEncSettings& settings, Bitrate bitrate)
   return true;
 }
 
-static int RawAllocationSize(Stride stride, AL_EChromaMode eChromaMode)
+static int RawAllocationSize(Stride stride, AL_EChromaMode eChromaMode, AL_ESrcMode eSrcMode)
 {
   auto IP_WIDTH_ALIGNMENT = 32;
   auto IP_HEIGHT_ALIGNMENT = 8;
@@ -171,7 +171,7 @@ static int RawAllocationSize(Stride stride, AL_EChromaMode eChromaMode)
 
   AL_TPicFormat tPicFormat = GetDefaultPicFormat();
   tPicFormat.eChromaMode = eChromaMode;
-  tPicFormat.eStorageMode = AL_FB_RASTER;
+  tPicFormat.eStorageMode = ConvertSoftSrcToSoftStorage(eSrcMode);
   tPicFormat.ePlaneMode = GetInternalBufPlaneMode(eChromaMode);
 
   auto const lumaSize = AL_GetAllocSizeSrc_PixPlane(&tPicFormat, stride.horizontal, stride.vertical, AL_PLANE_Y);
@@ -188,11 +188,11 @@ static int RawAllocationSize(Stride stride, AL_EChromaMode eChromaMode)
   return size;
 }
 
-BufferSizes CreateBufferSizes(AL_TEncSettings settings, Stride stride)
+BufferSizes CreateBufferSizes(AL_TEncSettings const& settings, Stride stride)
 {
   BufferSizes bufferSizes {};
   auto channel = settings.tChParam[0];
-  bufferSizes.input = RawAllocationSize(stride, AL_GET_CHROMA_MODE(channel.ePicFormat));
+  bufferSizes.input = RawAllocationSize(stride, AL_GET_CHROMA_MODE(channel.ePicFormat), channel.eSrcMode);
   bufferSizes.output = AL_GetMitigatedMaxNalSize({ channel.uEncWidth, channel.uEncHeight }, AL_GET_CHROMA_MODE(channel.ePicFormat), AL_GET_BITDEPTH(channel.ePicFormat));
 
   bool bIsXAVCIntraCBG = AL_IS_XAVC_CBG(channel.eProfile) && AL_IS_INTRA_PROFILE(channel.eProfile);
@@ -220,7 +220,7 @@ BufferSizes CreateBufferSizes(AL_TEncSettings settings, Stride stride)
   return bufferSizes;
 }
 
-bool CreateFillerData(AL_TEncSettings settings)
+bool CreateFillerData(AL_TEncSettings const& settings)
 {
   return settings.eEnableFillerData != AL_FILLER_DISABLE;
 }
@@ -231,7 +231,7 @@ bool UpdateFillerData(AL_TEncSettings& settings, bool isFillerDataEnabled)
   return true;
 }
 
-AspectRatioType CreateAspectRatio(AL_TEncSettings settings)
+AspectRatioType CreateAspectRatio(AL_TEncSettings const& settings)
 {
   return ConvertSoftToModuleAspectRatio(settings.eAspectRatio);
 }
@@ -245,7 +245,7 @@ bool UpdateAspectRatio(AL_TEncSettings& settings, AspectRatioType aspectRatio)
   return true;
 }
 
-ScalingListType CreateScalingList(AL_TEncSettings settings)
+ScalingListType CreateScalingList(AL_TEncSettings const& settings)
 {
   return ConvertSoftToModuleScalingList(settings.eScalingList);
 }
@@ -259,7 +259,7 @@ bool UpdateScalingList(AL_TEncSettings& settings, ScalingListType scalingList)
   return true;
 }
 
-QPs CreateQuantizationParameter(AL_TEncSettings settings)
+QPs CreateQuantizationParameter(AL_TEncSettings const& settings)
 {
   QPs qps;
   qps.mode.ctrl = ConvertSoftToModuleQPControl(settings.eQpCtrlMode);
@@ -307,7 +307,7 @@ bool UpdateQuantizationParameter(AL_TEncSettings& settings, QPs qps)
   return true;
 }
 
-Slices CreateSlicesParameter(AL_TEncSettings settings)
+Slices CreateSlicesParameter(AL_TEncSettings const& settings)
 {
   Slices slices;
   slices.dependent = settings.bDependentSlice;
@@ -330,7 +330,7 @@ bool UpdateSlicesParameter(AL_TEncSettings& settings, Slices slices)
   return true;
 }
 
-Format CreateFormat(AL_TEncSettings settings)
+Format CreateFormat(AL_TEncSettings const& settings)
 {
   Format format;
   auto channel = settings.tChParam[0];
@@ -359,14 +359,20 @@ bool UpdateFormat(AL_TEncSettings& settings, Format format, vector<ColorType> co
   return true;
 }
 
-Resolution CreateResolution(AL_TEncSettings settings, Stride stride)
+Resolution CreateResolution(AL_TEncSettings const& settings, Stride stride)
 {
   auto channel = settings.tChParam[0];
+  AL_TPicFormat const tPicFormat = AL_EncGetSrcPicFormat(AL_GET_CHROMA_MODE(channel.ePicFormat), AL_GET_BITDEPTH(channel.ePicFormat), channel.eSrcMode);
+
   Resolution resolution;
   resolution.dimension.horizontal = channel.uEncWidth;
   resolution.dimension.vertical = channel.uEncHeight;
   resolution.stride.horizontal = stride.horizontal;
   resolution.stride.vertical = stride.vertical;
+
+  if(tPicFormat.eStorageMode == AL_FB_TILE_32x4 || tPicFormat.eStorageMode == AL_FB_TILE_64x4)
+    resolution.stride.vertical /= 4;
+
   return resolution;
 }
 
@@ -395,7 +401,7 @@ bool UpdateResolution(AL_TEncSettings& settings, Stride& stride, StrideAlignment
   return true;
 }
 
-ColorPrimariesType CreateColorPrimaries(AL_TEncSettings settings)
+ColorPrimariesType CreateColorPrimaries(AL_TEncSettings const& settings)
 {
   return ConvertSoftToModuleColorPrimaries(settings.tColorConfig.eColourDescription);
 }
@@ -409,7 +415,7 @@ bool UpdateColorPrimaries(AL_TEncSettings& settings, ColorPrimariesType colorPri
   return true;
 }
 
-TransferCharacteristicsType CreateTransferCharacteristics(AL_TEncSettings settings)
+TransferCharacteristicsType CreateTransferCharacteristics(AL_TEncSettings const& settings)
 {
   return ConvertSoftToModuleTransferCharacteristics(settings.tColorConfig.eTransferCharacteristics);
 }
@@ -423,7 +429,7 @@ bool UpdateTransferCharacteristics(AL_TEncSettings& settings, TransferCharacteri
   return true;
 }
 
-ColourMatrixType CreateColourMatrix(AL_TEncSettings settings)
+ColourMatrixType CreateColourMatrix(AL_TEncSettings const& settings)
 {
   return ConvertSoftToModuleColourMatrix(settings.tColorConfig.eColourMatrixCoeffs);
 }
@@ -437,7 +443,7 @@ bool UpdateColourMatrix(AL_TEncSettings& settings, ColourMatrixType colourMatrix
   return true;
 }
 
-LookAhead CreateLookAhead(AL_TEncSettings settings)
+LookAhead CreateLookAhead(AL_TEncSettings const& settings)
 {
   LookAhead la {};
   la.lookAhead = settings.LookAhead;
@@ -456,7 +462,7 @@ bool UpdateLookAhead(AL_TEncSettings& settings, LookAhead la)
   return true;
 }
 
-TwoPass CreateTwoPass(AL_TEncSettings settings, string sTwoPassLogFile)
+TwoPass CreateTwoPass(AL_TEncSettings const& settings, string sTwoPassLogFile)
 {
   TwoPass tp;
   tp.nPass = settings.TwoPass;
@@ -475,7 +481,7 @@ bool UpdateTwoPass(AL_TEncSettings& settings, string& sTwoPassLogFile, TwoPass t
   return true;
 }
 
-MaxPicturesSizes CreateMaxPictureSizes(AL_TEncSettings settings)
+MaxPicturesSizes CreateMaxPictureSizes(AL_TEncSettings const& settings)
 {
   auto rateControl = settings.tChParam[0].tRCParam;
   MaxPicturesSizes sizes;
@@ -498,7 +504,7 @@ bool UpdateMaxPictureSizes(AL_TEncSettings& settings, MaxPicturesSizes sizes)
   return true;
 }
 
-MaxPicturesSizes CreateMaxPictureSizesInBits(AL_TEncSettings settings)
+MaxPicturesSizes CreateMaxPictureSizesInBits(AL_TEncSettings const& settings)
 {
   auto rateControl = settings.tChParam[0].tRCParam;
   MaxPicturesSizes sizes;
@@ -521,7 +527,7 @@ bool UpdateMaxPictureSizesInBits(AL_TEncSettings& settings, MaxPicturesSizes siz
   return true;
 }
 
-int CreateLoopFilterBeta(AL_TEncSettings settings)
+int CreateLoopFilterBeta(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   return channel.iBetaOffset;
@@ -538,7 +544,7 @@ bool UpdateLoopFilterBeta(AL_TEncSettings& settings, int beta)
   return true;
 }
 
-int CreateLoopFilterTc(AL_TEncSettings settings)
+int CreateLoopFilterTc(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   return channel.iTcOffset;
@@ -555,7 +561,7 @@ bool UpdateLoopFilterTc(AL_TEncSettings& settings, int tc)
   return true;
 }
 
-bool CreateAccessUnitDelimiter(AL_TEncSettings settings)
+bool CreateAccessUnitDelimiter(AL_TEncSettings const& settings)
 {
   return settings.bEnableAUD;
 }
@@ -566,7 +572,7 @@ bool UpdateAccessUnitDelimiter(AL_TEncSettings& settings, bool isAUDEnabled)
   return true;
 }
 
-bool CreateInputSynchronization(AL_TEncSettings settings)
+bool CreateInputSynchronization(AL_TEncSettings const& settings)
 {
   auto& channel = settings.tChParam[0];
   return channel.bSrcSync;
@@ -579,7 +585,7 @@ bool UpdateInputSynchronization(AL_TEncSettings& settings, bool isSrcSyncEnabled
   return true;
 }
 
-bool CreateBufferingPeriodSEI(AL_TEncSettings settings)
+bool CreateBufferingPeriodSEI(AL_TEncSettings const& settings)
 {
   return (settings.uEnableSEI & AL_SEI_BP) != 0;
 }
@@ -590,7 +596,7 @@ bool UpdateBufferingPeriodSEI(AL_TEncSettings& settings, bool isBPEnabled)
   return true;
 }
 
-bool CreatePictureTimingSEI(AL_TEncSettings settings)
+bool CreatePictureTimingSEI(AL_TEncSettings const& settings)
 {
   return (settings.uEnableSEI & AL_SEI_PT) != 0;
 }
@@ -601,7 +607,7 @@ bool UpdatePictureTimingSEI(AL_TEncSettings& settings, bool isPTEnabled)
   return true;
 }
 
-bool CreateRecoveryPointSEI(AL_TEncSettings settings)
+bool CreateRecoveryPointSEI(AL_TEncSettings const& settings)
 {
   return (settings.uEnableSEI & AL_SEI_RP) != 0;
 }
@@ -612,7 +618,7 @@ bool UpdateRecoveryPointSEI(AL_TEncSettings& settings, bool isRPEnabled)
   return true;
 }
 
-bool CreateMasteringDisplayColourVolumeSEI(AL_TEncSettings settings)
+bool CreateMasteringDisplayColourVolumeSEI(AL_TEncSettings const& settings)
 {
   return (settings.uEnableSEI & AL_SEI_MDCV) != 0;
 }
@@ -623,7 +629,7 @@ bool UpdateMasteringDisplayColourVolumeSEI(AL_TEncSettings& settings, bool isMDC
   return true;
 }
 
-bool CreateContentLightLevelSEI(AL_TEncSettings settings)
+bool CreateContentLightLevelSEI(AL_TEncSettings const& settings)
 {
   return (settings.uEnableSEI & AL_SEI_CLL) != 0;
 }
@@ -634,7 +640,7 @@ bool UpdateContentLightLevelSEI(AL_TEncSettings& settings, bool isCLLEnabled)
   return true;
 }
 
-bool CreateAlternativeTransferCharacteristicsSEI(AL_TEncSettings settings)
+bool CreateAlternativeTransferCharacteristicsSEI(AL_TEncSettings const& settings)
 {
   return (settings.uEnableSEI & AL_SEI_ATC) != 0;
 }
@@ -645,7 +651,7 @@ bool UpdateAlternativeTransferCharacteristicsSEI(AL_TEncSettings& settings, bool
   return true;
 }
 
-bool CreateST209410SEI(AL_TEncSettings settings)
+bool CreateST209410SEI(AL_TEncSettings const& settings)
 {
   return (settings.uEnableSEI & AL_SEI_ST2094_10) != 0;
 }
@@ -656,7 +662,7 @@ bool UpdateST209410SEI(AL_TEncSettings& settings, bool isST209410Enabled)
   return true;
 }
 
-bool CreateST209440SEI(AL_TEncSettings settings)
+bool CreateST209440SEI(AL_TEncSettings const& settings)
 {
   return (settings.uEnableSEI & AL_SEI_ST2094_40) != 0;
 }
@@ -667,7 +673,7 @@ bool UpdateST209440SEI(AL_TEncSettings& settings, bool isST209440Enabled)
   return true;
 }
 
-bool CreateVideoFullRange(AL_TEncSettings settings)
+bool CreateVideoFullRange(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   return channel.bVideoFullRange;
@@ -721,7 +727,7 @@ void ResetRcPluginContext(AL_TAllocator* allocator, AL_TEncSettings* settings)
   SetRcPluginContext(allocator, settings, rcp);
 }
 
-Region CreateOutputCrop(AL_TEncSettings settings)
+Region CreateOutputCrop(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   Region region;
@@ -746,7 +752,7 @@ bool UpdateOutputCrop(AL_TEncSettings& settings, Region region)
   return true;
 }
 
-Region CreateInputCrop(AL_TEncSettings settings)
+Region CreateInputCrop(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   Region region;
@@ -772,7 +778,7 @@ bool UpdateInputCrop(AL_TEncSettings& settings, Region region)
   return true;
 }
 
-bool CreateUniformSliceType(AL_TEncSettings settings)
+bool CreateUniformSliceType(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   return channel.bUseUniformSliceType;
@@ -785,7 +791,7 @@ bool UpdateUniformeSliceType(AL_TEncSettings& settings, bool isUniformSliceTypeE
   return true;
 }
 
-MinMax<int> CreateLog2CodingUnit(AL_TEncSettings settings)
+MinMax<int> CreateLog2CodingUnit(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   MinMax<int> log2CodingUnit;
@@ -805,7 +811,7 @@ bool UpdateLog2CodingUnit(AL_TEncSettings& settings, MinMax<int> log2CodingUnit)
   return true;
 }
 
-StartCodeBytesAlignmentType CreateStartCodeBytesAlignment(AL_TEncSettings settings)
+StartCodeBytesAlignmentType CreateStartCodeBytesAlignment(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   return ConvertSoftToModuleStartCodeBytesAlignment(channel.eStartCodeBytesAligned);
@@ -821,7 +827,7 @@ bool UpdateStartCodeBytesAlignment(AL_TEncSettings& settings, StartCodeBytesAlig
   return true;
 }
 
-bool CreateRealtime(AL_TEncSettings settings)
+bool CreateRealtime(AL_TEncSettings const& settings)
 {
   auto channel = settings.tChParam[0];
   return channel.bNonRealtime;

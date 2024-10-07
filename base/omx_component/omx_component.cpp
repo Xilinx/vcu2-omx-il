@@ -633,12 +633,6 @@ OMX_ERRORTYPE Component::GetParameter(OMX_IN OMX_INDEXTYPE index, OMX_INOUT OMX_
     auto cpb = static_cast<OMX_ALG_VIDEO_PARAM_CODED_PICTURE_BUFFER*>(param);
     return ConstructVideoCodedPictureBuffer(*cpb, *port, media);
   }
-  case OMX_ALG_IndexParamVideoPrefetchBuffer:
-  {
-    auto port = getCurrentPort(param);
-    auto pb = static_cast<OMX_ALG_VIDEO_PARAM_PREFETCH_BUFFER*>(param);
-    return ConstructVideoPrefetchBuffer(*pb, *port, media);
-  }
   case OMX_ALG_IndexParamVideoScalingList:
   {
     auto port = getCurrentPort(param);
@@ -1029,11 +1023,6 @@ OMX_ERRORTYPE Component::SetParameter(OMX_IN OMX_INDEXTYPE index, OMX_IN OMX_PTR
   {
     auto codedPictureBuffer = static_cast<OMX_ALG_VIDEO_PARAM_CODED_PICTURE_BUFFER*>(param);
     return SetVideoCodedPictureBuffer(*codedPictureBuffer, *port, media);
-  }
-  case OMX_ALG_IndexParamVideoPrefetchBuffer:
-  {
-    auto prefetchBuffer = static_cast<OMX_ALG_VIDEO_PARAM_PREFETCH_BUFFER*>(param);
-    return SetVideoPrefetchBuffer(*prefetchBuffer, *port, media);
   }
   case OMX_ALG_IndexParamVideoScalingList:
   {
