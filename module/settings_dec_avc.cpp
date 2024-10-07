@@ -217,7 +217,7 @@ SettingsInterface::ErrorType DecSettingsAVC::Get(std::string index, void* settin
   {
     SupportedFormats supported {};
     supported.input = CreateFormatsSupported(this->colors, this->bitdepths, this->storages);
-    supported.output = vector<Format>({ CreateFormat(this->settings) });
+    supported.output = supported.input;
     *(static_cast<SupportedFormats*>(settings)) = supported;
     return SUCCESS;
   }

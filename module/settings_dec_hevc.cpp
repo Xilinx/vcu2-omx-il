@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 #include <cstring> // memset
-#include <cmath>
 #include <cassert>
+#include <math.h>
 #include <utility/round.h>
 #include "settings_dec_hevc.h"
 #include "settings_dec_itu.h"
@@ -224,7 +224,7 @@ SettingsInterface::ErrorType DecSettingsHEVC::Get(std::string index, void* setti
   {
     SupportedFormats supported {};
     supported.input = CreateFormatsSupported(this->colors, this->bitdepths, this->storages);
-    supported.output = vector<Format>({ CreateFormat(this->settings) });
+    supported.output = supported.input;
     *(static_cast<SupportedFormats*>(settings)) = supported;
     return SUCCESS;
   }
