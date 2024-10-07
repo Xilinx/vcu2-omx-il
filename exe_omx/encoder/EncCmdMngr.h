@@ -31,6 +31,8 @@ private:
     bool bIsLongTerm = false;
     bool bUseLongTerm = false;
     bool bIsSkip = false;
+    bool bSAO = true;
+    bool bChangeSAO = false;
     bool bKeyFrame = false;
     bool bRecoveryPoint = false;
     bool bChangeGopLength = false;

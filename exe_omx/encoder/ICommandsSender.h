@@ -12,6 +12,7 @@ struct ICommandsSender
   virtual void notifyIsLongTerm() = 0;
   virtual void notifyUseLongTerm() = 0;
   virtual void notifyIsSkip() = 0;
+  virtual void setSAO(bool bSAOEnabled) = 0;
   virtual void restartGop() = 0;
   virtual void restartGopRecoveryPoint() = 0;
   virtual void setGopLength(int gopLength) = 0;

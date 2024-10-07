@@ -12,6 +12,7 @@
 #include <algorithm> // max
 #include <utility/round.h>
 #include <cmath>
+#include <cassert>
 
 extern "C"
 {

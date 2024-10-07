@@ -243,6 +243,16 @@ bool CEncCmdMngr::ParseCmd(std::string sLine, TFrmCmd& Cmd, bool bSameFrame)
     else if(Tok == "Skip")
       Cmd.bIsSkip = true;
 
+    else if(Tok == "EnableSAO")
+    {
+      Cmd.bSAO = true;
+      Cmd.bChangeSAO = true;
+    }
+    else if(Tok == "DisableSAO")
+    {
+      Cmd.bSAO = false;
+      Cmd.bChangeSAO = true;
+    }
     else if(Tok == "KF")
       Cmd.bKeyFrame = true;
     else if(Tok == "RP")
@@ -473,6 +483,9 @@ void CEncCmdMngr::Process(ICommandsSender* sender, int iFrame)
 
       if(m_Cmds.front().bIsSkip)
         sender->notifyIsSkip();
+
+      if(m_Cmds.front().bChangeSAO)
+        sender->setSAO(m_Cmds.front().bSAO);
 
       if(m_Cmds.front().bKeyFrame)
         sender->restartGop();

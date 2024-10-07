@@ -56,6 +56,12 @@ void CommandsSender::notifyIsSkip()
   assert(0 && "notifyIsSkip not implemented");
 }
 
+void CommandsSender::setSAO(bool bSAOEnabled)
+{
+  (void)bSAOEnabled;
+  assert(0 && "setSAO is not supported");
+}
+
 void CommandsSender::restartGop()
 {
   OMX_ALG_VIDEO_CONFIG_INSERT config;
