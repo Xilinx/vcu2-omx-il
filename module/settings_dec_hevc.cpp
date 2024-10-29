@@ -224,7 +224,7 @@ SettingsInterface::ErrorType DecSettingsHEVC::Get(std::string index, void* setti
   {
     SupportedFormats supported {};
     supported.input = CreateFormatsSupported(this->colors, this->bitdepths, this->storages);
-    supported.output = supported.input;
+    supported.output = vector<Format>({ CreateFormat(this->settings) });
     *(static_cast<SupportedFormats*>(settings)) = supported;
     return SUCCESS;
   }
