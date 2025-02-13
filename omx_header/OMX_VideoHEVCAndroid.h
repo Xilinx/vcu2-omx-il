@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2024 Allegro DVT. All rights reserved.
+ * Copyright (C) 2016-2025 Allegro DVT. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -79,6 +79,14 @@ typedef enum OMX_VIDEO_HEVCLEVELTYPE
   OMX_VIDEO_HEVCHighTierLevel61 = OMX_ALG_VIDEO_HEVCHighTierLevel61,
   OMX_VIDEO_HEVCMainTierLevel62 = OMX_ALG_VIDEO_HEVCMainTierLevel62,
   OMX_VIDEO_HEVCHighTierLevel62 = OMX_ALG_VIDEO_HEVCHighTierLevel62,
+  OMX_VIDEO_HEVCMainTierLevel63 = OMX_ALG_VIDEO_HEVCMainTierLevel63,
+  OMX_VIDEO_HEVCHighTierLevel63 = OMX_ALG_VIDEO_HEVCHighTierLevel63,
+  OMX_VIDEO_HEVCMainTierLevel7 = OMX_ALG_VIDEO_HEVCMainTierLevel7,
+  OMX_VIDEO_HEVCHighTierLevel7 = OMX_ALG_VIDEO_HEVCHighTierLevel7,
+  OMX_VIDEO_HEVCMainTierLevel71 = OMX_ALG_VIDEO_HEVCMainTierLevel71,
+  OMX_VIDEO_HEVCHighTierLevel71 = OMX_ALG_VIDEO_HEVCHighTierLevel71,
+  OMX_VIDEO_HEVCMainTierLevel72 = OMX_ALG_VIDEO_HEVCMainTierLevel72,
+  OMX_VIDEO_HEVCHighTierLevel72 = OMX_ALG_VIDEO_HEVCHighTierLevel72,
   OMX_VIDEO_HEVCHighTiermax     = OMX_ALG_VIDEO_HEVCLevelMaxEnum,
   /* Not implemented */
   OMX_VIDEO_HEVCHighTierLevel1  = OMX_ALG_VIDEO_HEVCLevelMaxEnum,

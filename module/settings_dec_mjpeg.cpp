@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: © 2024 Allegro DVT <github-ip@allegrodvt.com>
+// SPDX-FileCopyrightText: © 2025 Allegro DVT <github-ip@allegrodvt.com>
 // SPDX-License-Identifier: MIT
 
 #include <cstring> // memset
@@ -76,7 +76,7 @@ static Mimes CreateMimes()
 
 static int CreateLatency(AL_TDecSettings settings)
 {
-  double buffers = settings.iStackSize;
+  double buffers = AL_JPEG_GetMinOutputBuffersNeeded(settings.uNumCore);
 
   double realFramerate = (static_cast<double>(settings.uFrameRate) / static_cast<double>(settings.uClkRatio));
   double timeInMilliseconds = (static_cast<double>(buffers * 1000.0) / realFramerate);
@@ -88,7 +88,7 @@ static BufferCounts CreateBufferCounts(AL_TDecSettings settings)
 {
   BufferCounts bufferCounts;
   bufferCounts.input = 2;
-  bufferCounts.output = settings.iStackSize;
+  bufferCounts.output = AL_JPEG_GetMinOutputBuffersNeeded(settings.uNumCore);
   return bufferCounts;
 }
 
@@ -359,7 +359,8 @@ bool DecSettingsJPEG::Check()
   if(AL_DecSettings_CheckValidity(&settings, stderr) != 0)
     return false;
 
-  AL_DecSettings_CheckCoherency(&settings, stdout);
+  if(AL_DecSettings_CheckCoherency(&settings, stdout) < 0)
+    return false;
 
   // Fix: remove this line and below block when a better fix is found
   // This is a Gstreamer issue (not OMX) for allocation!

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: © 2024 Allegro DVT <github-ip@allegrodvt.com>
+// SPDX-FileCopyrightText: © 2025 Allegro DVT <github-ip@allegrodvt.com>
 // SPDX-License-Identifier: MIT
 
 #include "settings_enc_avc.h"
@@ -80,7 +80,7 @@ void EncSettingsAVC::Reset()
   settings.bEnableAUD = false;
   settings.LookAhead = 0;
   settings.TwoPass = 0;
-  settings.uEnableSEI = AL_SEI_NONE;
+  settings.eEnableSEI = AL_SEI_NONE;
 
   AL_TPicFormat tPicFormat = GetDefaultPicFormat();
 
@@ -1047,7 +1047,9 @@ bool EncSettingsAVC::Check()
   auto const picFormat = AL_EncGetSrcPicFormat(AL_GET_CHROMA_MODE(channel.ePicFormat), AL_GET_BITDEPTH(channel.ePicFormat), channel.eSrcMode);
   auto fourCC = AL_EncGetSrcFourCC(picFormat);
   assert(AL_GET_BITDEPTH(channel.ePicFormat) == channel.uSrcBitDepth);
-  AL_Settings_CheckCoherency(&settings, &channel, fourCC, stdout);
+
+  if(AL_Settings_CheckCoherency(&settings, &channel, fourCC, stdout) < 0)
+    return false;
 
   AL_TPicFormat tPicFormat = GetDefaultPicFormat();
 

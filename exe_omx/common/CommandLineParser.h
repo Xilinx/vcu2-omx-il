@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: © 2024 Allegro DVT <github-ip@allegrodvt.com>
+// SPDX-FileCopyrightText: © 2025 Allegro DVT <github-ip@allegrodvt.com>
 // SPDX-License-Identifier: MIT
 
 #pragma once
@@ -12,9 +12,12 @@
 #include <map>
 #include <stdexcept>
 #include <iostream>
-#include "lib_rtos/types.h"
 #include "lib_app/TypeName.h"
 
+extern "C"
+{
+#include "lib_rtos/types.h"
+}
 struct CommandLineParser
 {
   explicit CommandLineParser(void) = default;
@@ -33,11 +36,11 @@ struct CommandLineParser
     bool repeat = false;
   };
 
-  bool parse(int argc, char* argv[])
+  bool parse(int32_t argc, char* argv[])
   {
     deprecatedWordsParsed.clear();
 
-    for(int i = 1; i < argc; ++i)
+    for(int32_t i = 1; i < argc; ++i)
       words.push(argv[i]);
 
     while(!words.empty())
@@ -321,6 +324,24 @@ struct CommandLineParser
                    *value = popWord();
                  else
                    *value = word;
+               };
+    insertOption(name, o);
+  }
+
+  template<typename T>
+  void addStringWithAFlag(std::string name, std::string* sValue, std::string desc_, T* flag, T tValue = (T) 1)
+  {
+    Option o;
+    o.type = "string";
+    o.desc_ = desc_;
+    o.desc = makeDescription(name, o.type, desc_);
+    o.parser = [=](std::string word)
+               {
+                 if(isOption(word))
+                   *sValue = popWord();
+                 else
+                   *sValue = word;
+                 *flag = tValue;
                };
     insertOption(name, o);
   }

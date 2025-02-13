@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: © 2024 Allegro DVT <github-ip@allegrodvt.com>
+// SPDX-FileCopyrightText: © 2025 Allegro DVT <github-ip@allegrodvt.com>
 // SPDX-License-Identifier: MIT
 
 #pragma once
@@ -44,6 +44,7 @@ struct CommandsSender final : public ICommandsSender
   void setMaxPictureSize_I(int iMaxPictureSize_I) override;
   void setMaxPictureSize_P(int iMaxPictureSize_P) override;
   void setMaxPictureSize_B(int iMaxPictureSize_B) override;
+
   void setQPChromaOffsets(int iQp1Offset, int iQp2Offset) override;
   void setAutoQP(bool bUseAutoQP) override;
   void setAutoQPThresholdQPAndDeltaQP(bool bEnableUserAutoQPValues, std::vector<int> thresholdQP, std::vector<int> deltaQP) override;
