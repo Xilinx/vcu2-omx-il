@@ -32,6 +32,7 @@ struct ICommandsSender
   virtual void setQPIPDelta(int32_t iQPDelta) = 0;
   virtual void setQPPBDelta(int32_t iQPDelta) = 0;
   virtual void setDynamicInput(int32_t iInputIdx) = 0;
+  virtual void setLFMode(int32_t iMode) = 0;
   virtual void setLFBetaOffset(int32_t iBetaOffset) = 0;
   virtual void setLFTcOffset(int32_t iTcOffset) = 0;
   virtual void setCostMode(bool bCostMode) = 0;

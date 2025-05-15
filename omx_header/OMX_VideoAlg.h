@@ -694,7 +694,7 @@ typedef struct OMX_ALG_VIDEO_PARAM_LOW_BANDWIDTH
 }OMX_ALG_VIDEO_PARAM_LOW_BANDWIDTH;
 
 /**
- * Enumration of possible aspect ratio types
+ * Enumeration of possible aspect ratio types
  */
 typedef enum OMX_ALG_EAspectRatio
 {

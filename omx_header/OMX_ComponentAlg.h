@@ -41,7 +41,7 @@ extern "C" {
 #include <OMX_Component.h>
 
 /**
- * Enumuration of possible buffer mode types
+ * Enumeration of possible buffer mode types
  */
 typedef enum OMX_ALG_BUFFER_MODE
 {

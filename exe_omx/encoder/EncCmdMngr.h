@@ -71,6 +71,8 @@ private:
     int32_t iPBDelta = 0;
     bool bChangeResolution = false;
     int32_t iInputIdx;
+    bool bSetLFMode = false;
+    int32_t iLFMode;
     bool bSetLFBetaOffset = false;
     int32_t iLFBetaOffset;
     bool bSetLFTcOffset = false;

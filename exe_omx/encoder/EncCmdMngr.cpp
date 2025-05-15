@@ -226,6 +226,11 @@ bool CEncCmdMngr::ParseCmd(std::string sLine, TFrmCmd& Cmd, bool bSameFrame)
       Cmd.bChangeResolution = true;
       Cmd.iInputIdx = int(Tok.GetValue());
     }
+    else if(Tok == "LF.Mode")
+    {
+      Cmd.bSetLFMode = true;
+      Cmd.iLFMode = int(Tok.GetValue());
+    }
     else if(Tok == "LF.BetaOffset")
     {
       Cmd.bSetLFBetaOffset = true;
@@ -410,6 +415,9 @@ void CEncCmdMngr::Process(ICommandsSender* sender, int32_t iFrame)
 
       if(m_Cmds.front().bChangeResolution)
         sender->setDynamicInput(m_Cmds.front().iInputIdx);
+
+      if(m_Cmds.front().bSetLFMode)
+        sender->setLFMode(m_Cmds.front().iLFMode);
 
       if(m_Cmds.front().bSetLFBetaOffset)
         sender->setLFBetaOffset(m_Cmds.front().iLFBetaOffset);
