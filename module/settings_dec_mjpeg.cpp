@@ -4,10 +4,10 @@
 #include <cstring> // memset
 #include <cmath>
 #include <cassert>
-#include <utility/round.h>
-#include "settings_dec_mjpeg.h"
-#include "settings_dec_itu.h"
-#include "settings_codec_itu.h"
+#include <utility/round.hpp>
+#include "settings_dec_mjpeg.hpp"
+#include "settings_dec_itu.hpp"
+#include "settings_codec_itu.hpp"
 
 using namespace std;
 

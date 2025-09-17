@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <stdexcept>
-#include "device_dec_hardware_riscv.h"
+#include "device_dec_hardware_riscv.hpp"
 
 using namespace std;
 

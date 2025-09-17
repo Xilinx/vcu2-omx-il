@@ -29,20 +29,20 @@
 #include <OMX_IndexAlg.h>
 #include <OMX_IVCommonAlg.h>
 
-#include "CommandsSender.h"
-#include "EncCmdMngr.h"
+#include "CommandsSender.hpp"
+#include "EncCmdMngr.hpp"
 
-#include <utility/logger.h>
-#include <utility/locked_queue.h>
-#include <utility/semaphore.h>
-#include <utility/round.h>
-#include <utility/omx_translate.h>
+#include <utility/logger.hpp>
+#include <utility/locked_queue.hpp>
+#include <utility/semaphore.hpp>
+#include <utility/round.hpp>
+#include <utility/omx_translate.hpp>
 
-#include "../common/helpers.h"
-#include "../common/getters.h"
-#include "../common/CommandLineParser.h"
-#include "../common/codec.h"
-#include "../common/YuvReadWrite.h"
+#include "../common/helpers.hpp"
+#include "../common/getters.hpp"
+#include "../common/CommandLineParser.hpp"
+#include "../common/codec.hpp"
+#include "../common/YuvReadWrite.hpp"
 
 extern "C"
 {
@@ -52,7 +52,7 @@ extern "C"
 #include "lib_encode/LibEncoderRiscv.h"
 }
 
-#include "RCPlugin.h"
+#include "RCPlugin.hpp"
 
 #define DEFAULT_MAX_FRAMES 0
 
@@ -770,7 +770,7 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
   videoEncoderCallbacks.FillBufferDone = onOutputBufferAvailable;
 
   OMX_ALG_COREINDEXTYPE coreType = OMX_ALG_CoreIndexUnused;
-  OMX_PTR coreSettings;
+  OMX_PTR coreSettings = nullptr;
 
   OMX_CALL(OMX_ALG_GetHandle(&app.hEncoder, (OMX_STRING)component.c_str(), &app, const_cast<OMX_CALLBACKTYPE*>(&videoEncoderCallbacks), coreType, coreSettings));
   auto scopeHandle = scopeExit([&]() {

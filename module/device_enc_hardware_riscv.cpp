@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <stdexcept>
-#include "device_enc_hardware_riscv.h"
+#include "device_enc_hardware_riscv.hpp"
 
 EncDeviceHardwareRiscV::EncDeviceHardwareRiscV(std::string device) :  device{device}
 {

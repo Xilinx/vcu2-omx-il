@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: © 2025 Allegro DVT <github-ip@allegrodvt.com>
 // SPDX-License-Identifier: MIT
 
-#include "base/omx_component/omx_component_dec.h"
-#include "base/omx_component/omx_expertise_hevc.h"
-#include "module/settings_dec_hevc.h"
-#include "module/module_dec.h"
+#include "base/omx_component/omx_component_dec.hpp"
+#include "base/omx_component/omx_expertise_hevc.hpp"
+#include "module/settings_dec_hevc.hpp"
+#include "module/module_dec.hpp"
 
-#include "module/device_dec_hardware_riscv.h"
+#include "module/device_dec_hardware_riscv.hpp"
 
 #include <utility>
 #include <cstring>
@@ -33,8 +33,8 @@ static char const* RISCV_DEVICE_DEC_NAME()
   return "/dev/al_d3xx";
 }
 
-#include "base/omx_component/omx_expertise_avc.h"
-#include "module/settings_dec_avc.h"
+#include "base/omx_component/omx_expertise_avc.hpp"
+#include "module/settings_dec_avc.hpp"
 
 static DecComponent* GenerateAvcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_STRING cComponentName, OMX_STRING cRole, OMX_ALG_COREINDEXTYPE nCoreParamIndex, OMX_PTR pSettings)
 {
@@ -77,7 +77,7 @@ static DecComponent* GenerateAvcComponentRiscV(OMX_HANDLETYPE hComponent, OMX_ST
   };
 }
 
-#include "module/settings_dec_mjpeg.h"
+#include "module/settings_dec_mjpeg.hpp"
 
 static DecComponent* GenerateJpegComponentRiscV(OMX_HANDLETYPE hComponent, OMX_STRING cComponentName, OMX_STRING cRole, OMX_ALG_COREINDEXTYPE nCoreParamIndex, OMX_PTR pSettings)
 {

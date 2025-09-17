@@ -1,16 +1,15 @@
 // SPDX-FileCopyrightText: © 2025 Allegro DVT <github-ip@allegrodvt.com>
 // SPDX-License-Identifier: MIT
 
-#include "settings_enc_mjpeg.h"
-#include "settings_enc_itu.h"
-#include "settings_codec_itu.h"
-#include "convert_module_soft_enc.h"
-#include "convert_module_soft.h"
+#include "settings_enc_mjpeg.hpp"
+#include "settings_enc_itu.hpp"
+#include "settings_codec_itu.hpp"
+#include "convert_module_soft_enc.hpp"
+#include "convert_module_soft.hpp"
 
-#include <utility/round.h>
+#include <utility/round.hpp>
 #include <cstring> // memset
 #include <algorithm> // max
-#include <utility/round.h>
 #include <cmath>
 #include <cassert>
 
