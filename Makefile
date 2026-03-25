@@ -33,8 +33,14 @@ EXTERNAL_SRC?=
 EXTERNAL_LIB?=
 
 
+ifneq ($(MAKECMDGOALS), clean)
+  include $(EXTERNAL_SRC)/config.mk
+else
+  -include $(EXTERNAL_SRC)/config.mk
+endif
 
-
+MAKEFLAGS+=-j1
+$(warning Parallelism is not supported when building with RISCV enabled. Consider adding -j1)
 -include $(EXTERNAL_SRC)/riscv.mk
 
 ENABLE_VCU?=1

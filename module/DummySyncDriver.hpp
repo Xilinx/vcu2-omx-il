@@ -1,18 +1,18 @@
-// SPDX-FileCopyrightText: © 2025 Allegro DVT <github-ip@allegrodvt.com>
+// SPDX-FileCopyrightText: © 2026 Allegro DVT <github-ip@allegrodvt.com>
 // SPDX-License-Identifier: MIT
 
 #pragma once
 
 extern "C"
 {
-#include "lib_common/IDriver.h"
+#include "lib_common/I_Driver.h"
 }
 
 #include <vector>
 
 #include "SyncIp.hpp"
 
-struct DummyDriver : public AL_TDriver
+struct DummyDriver : public AL_IDriver
 {
   DummyDriver();
   virtual ~DummyDriver() {};

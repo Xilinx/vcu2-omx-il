@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: © 2025 Allegro DVT <github-ip@allegrodvt.com>
+// SPDX-FileCopyrightText: © 2026 Allegro DVT <github-ip@allegrodvt.com>
 // SPDX-License-Identifier: MIT
 
 #include <cassert>
@@ -770,7 +770,7 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
   videoEncoderCallbacks.FillBufferDone = onOutputBufferAvailable;
 
   OMX_ALG_COREINDEXTYPE coreType = OMX_ALG_CoreIndexUnused;
-  OMX_PTR coreSettings = nullptr;
+  OMX_PTR coreSettings;
 
   OMX_CALL(OMX_ALG_GetHandle(&app.hEncoder, (OMX_STRING)component.c_str(), &app, const_cast<OMX_CALLBACKTYPE*>(&videoEncoderCallbacks), coreType, coreSettings));
   auto scopeHandle = scopeExit([&]() {
