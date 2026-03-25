@@ -33,10 +33,12 @@ EXTERNAL_SRC?=
 EXTERNAL_LIB?=
 
 
+ifneq ($(EXTERNAL_SRC),)
 ifneq ($(MAKECMDGOALS), clean)
-  include $(EXTERNAL_SRC)/config.mk
+ include ${EXTERNAL_SRC}/config.mk
 else
-  -include $(EXTERNAL_SRC)/config.mk
+ -include ${EXTERNAL_SRC}/config.mk
+endif
 endif
 
 MAKEFLAGS+=-j1
