@@ -307,6 +307,10 @@ bool EncModule::DestroyEncoder()
 
   device->Deinit();
 
+  // Add Sleep for DeInit required in SrcSync mode
+  // required to allow v4l2src to complete EOL SrcSync signals to frame boundary
+  Rtos_Sleep(40);
+
   if(!roiCtx)
   {
     LOG_ERROR("ROI manager isn't created");
