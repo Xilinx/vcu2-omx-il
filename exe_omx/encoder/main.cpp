@@ -580,7 +580,7 @@ static OMX_ERRORTYPE onInputBufferAvailable(OMX_HANDLETYPE hComponent, OMX_PTR p
     return OMX_ErrorNone;
 
   unique_lock<mutex> lock(app->mutex);
-  app->cv.wait(lock, [&] { return app->read = true;
+  app->cv.wait(lock, [&] { return app->read;
                });
 
   Read(pBuffer, *app);
@@ -866,7 +866,7 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
     seiSuffix.pBuffer[i] = seiSuffix.nFilledLen - 1 - i;
   }
 
-  for(auto i = 0; i < 1; ++i)
+  for(auto i = 0; i < get.GetBuffersCount(app.input.index); ++i)
   {
     auto buf = app.input.buffers.at(i);
     Read(buf, app);
@@ -911,7 +911,7 @@ static OMX_ERRORTYPE safeMain(int argc, char** argv)
 
   /** free buffers */
   get.IsComponentSupplier(app.input.index) ? freeAllocBuffers(app.input.index, app) : freeUseBuffers(app.input.index, app);
-  get.IsComponentSupplier(app.output.index) ? freeAllocBuffers(app.input.index, app) : freeUseBuffers(app.output.index, app);
+  get.IsComponentSupplier(app.output.index) ? freeAllocBuffers(app.output.index, app) : freeUseBuffers(app.output.index, app);
 
   app.encoderEventState.wait();
 

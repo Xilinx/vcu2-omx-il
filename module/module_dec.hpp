@@ -109,7 +109,8 @@ private:
     SetDefaultDecOutputSettings(&userOutputSettings);
     userOutputSettings.tPicFormat = AL_GetDecPicFormat(settings->eChroma, settings->iBitDepth, AL_FB_RASTER, false, AL_PLANE_MODE_MAX_ENUM);
 
-    AL_Decoder_ConfigureOutputSettings(pThis->decoder, &userOutputSettings);
+    if(!AL_Decoder_ConfigureOutputSettings(pThis->decoder, &userOutputSettings))
+      return AL_ERROR;
 
     pThis->ResolutionFound(buffersNumber, *settings, *crop);
     return AL_SUCCESS;

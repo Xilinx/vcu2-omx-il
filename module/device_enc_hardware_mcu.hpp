@@ -11,6 +11,7 @@
 extern "C"
 {
 #include <lib_fpga/DmaAlloc.h>
+#include <lib_common/I_Communication.h>
 }
 
 struct EncDeviceHardwareMcu final : EncDeviceInterface
@@ -28,4 +29,5 @@ private:
   std::string const device;
   std::shared_ptr<AL_TAllocator> allocator;
   AL_IEncScheduler* scheduler {};
+  AL_ICommunication* communication {};
 };

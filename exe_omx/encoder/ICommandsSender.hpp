@@ -3,7 +3,10 @@
 
 #pragma once
 
-#include <cstdint>
+extern "C"
+{
+#include "lib_rtos/types.h"
+}
 
 #include <vector>
 

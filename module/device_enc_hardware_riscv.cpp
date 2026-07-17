@@ -6,7 +6,9 @@
 
 EncDeviceHardwareRiscV::EncDeviceHardwareRiscV(std::string device) :  device{device}
 {
-  AL_Lib_Encoder_Init(AL_LIB_ENCODER_ARCH_RISCV);
+  if(!AL_IS_SUCCESS_CODE(AL_Lib_Encoder_Init(AL_LIB_ENCODER_ARCH_RISCV)))
+    throw std::runtime_error("Failed to initialized encoder RISC-V architecture");
+
   riscv_ctx = AL_Riscv_Encode_CreateCtx(device.c_str());
 
   if(!riscv_ctx)
@@ -17,6 +19,8 @@ EncDeviceHardwareRiscV::~EncDeviceHardwareRiscV()
 {
   if(riscv_ctx)
     AL_Riscv_Encode_DestroyCtx(riscv_ctx);
+
+  AL_Lib_Encoder_DeInit();
 }
 
 AL_IEncScheduler* EncDeviceHardwareRiscV::Init()

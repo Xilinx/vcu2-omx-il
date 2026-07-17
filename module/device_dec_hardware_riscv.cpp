@@ -8,7 +8,9 @@ using namespace std;
 
 DecDeviceHardwareRiscV::DecDeviceHardwareRiscV(string device) : device{device}
 {
-  AL_Lib_Decoder_Init(AL_LIB_DECODER_ARCH_RISCV);
+  if(!AL_IS_SUCCESS_CODE(AL_Lib_Decoder_Init(AL_LIB_DECODER_ARCH_RISCV)))
+    throw std::runtime_error("Failed to initialized decoder RISCV-V architecture");
+
   riscv_ctx = AL_Riscv_Decode_CreateCtx(device.c_str());
 
   if(!riscv_ctx)
@@ -19,6 +21,8 @@ DecDeviceHardwareRiscV::~DecDeviceHardwareRiscV()
 {
   if(riscv_ctx)
     AL_Riscv_Decode_DestroyCtx(riscv_ctx);
+
+  AL_Lib_Decoder_DeInit();
 }
 
 AL_IDecScheduler* DecDeviceHardwareRiscV::Init()

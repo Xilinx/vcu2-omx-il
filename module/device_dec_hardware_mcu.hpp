@@ -6,6 +6,11 @@
 #include "device_dec_interface.hpp"
 #include <string>
 
+extern "C"
+{
+#include <lib_common/I_Communication.h>
+}
+
 struct DecDeviceHardwareMcu final : DecDeviceInterface
 {
   DecDeviceHardwareMcu(std::string device);
@@ -13,6 +18,7 @@ struct DecDeviceHardwareMcu final : DecDeviceInterface
 
   AL_IDecScheduler* Init() override;
   void Deinit() override;
+
   BufferContiguities GetBufferContiguities() const override;
   BufferBytesAlignments GetBufferBytesAlignments() const override;
   void* GetDeviceContext() override;
@@ -20,4 +26,5 @@ struct DecDeviceHardwareMcu final : DecDeviceInterface
 private:
   std::string const device;
   AL_IDecScheduler* scheduler {};
+  AL_ICommunication* communication {};
 };

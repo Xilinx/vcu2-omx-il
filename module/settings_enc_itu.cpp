@@ -135,7 +135,7 @@ Bitrate CreateBitrate(AL_TEncSettings const& settings)
   bitrate.max = rateControl.uMaxBitRate / 1000;
   bitrate.cpb = rateControl.uCPBSize / 90;
   bitrate.ird = rateControl.uInitialRemDelay / 90;
-  bitrate.quality = (rateControl.uMaxPSNR / 100) - 28;
+  bitrate.quality = (rateControl.uMaxPSNR / 100);
   bitrate.maxConsecutiveSkipFrame = rateControl.uMaxConsecSkip;
   bitrate.rateControl.mode = ConvertSoftToModuleRateControl(rateControl.eRCMode);
   bitrate.rateControl.options = ConvertSoftToModuleRateControlOption(rateControl.eOptions);
@@ -155,7 +155,7 @@ bool UpdateBitrate(AL_TEncSettings& settings, Bitrate bitrate)
   rateControl.uMaxBitRate = bitrate.max * 1000;
   rateControl.uCPBSize = bitrate.cpb * 90;
   rateControl.uInitialRemDelay = bitrate.ird * 90;
-  rateControl.uMaxPSNR = (bitrate.quality + 28) * 100;
+  rateControl.uMaxPSNR = bitrate.quality * 100;
   rateControl.uMaxConsecSkip = bitrate.maxConsecutiveSkipFrame;
   rateControl.eRCMode = ConvertModuleToSoftRateControl(bitrate.rateControl.mode);
   rateControl.eOptions = ConvertModuleToSoftRateControlOption(bitrate.rateControl.options);

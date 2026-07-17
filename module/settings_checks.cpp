@@ -86,10 +86,10 @@ bool CheckBitrate(Bitrate const& bitrate, Clock const& clock)
   if(bitrate.ird > bitrate.cpb)
     return false;
 
-  if(bitrate.quality < 0)
+  if(bitrate.quality < 20)
     return false;
 
-  if(bitrate.quality > 20)
+  if(bitrate.quality > 50)
     return false;
 
   return true;

@@ -5,21 +5,22 @@
 
 extern "C"
 {
-#include "lib_common/I_Driver.h"
+#include "lib_common/I_Communication.h"
 }
 
 #include <vector>
 
 #include "SyncIp.hpp"
 
-struct DummyDriver : public AL_IDriver
+struct DummyDriver : public AL_ICommunication
 {
-  DummyDriver();
-  virtual ~DummyDriver() {};
+  explicit DummyDriver(std::string device);
+  virtual ~DummyDriver() = default;
 
-  int32_t Open(const char* device);
-  void Close(int32_t fd);
-  AL_EDriverError PostMessage(int32_t fd, uint32_t messageId, void* data, bool isBlocking);
+  bool Open(void* handle, char const* device);
+  void Close(void* handle);
+  AL_ECommunicationError PostMessage(void* handle, AL_ECommunicationMessageID eMessageID, void* data, bool isBlocking);
+  void Destroy(void);
 
   /* mock-up interface */
 
@@ -31,7 +32,8 @@ struct DummyDriver : public AL_IDriver
   bool encode = true;
   int32_t numChan = 4;
   std::vector<ChannelStatus> channelStatuses {};
+  std::string const device;
 };
 
-DummyDriver* AL_InitDummyDriver(bool encode, int32_t numChan);
-DummyDriver* AL_GetDummyDriver();
+bool AL_InitDummyDriver(DummyDriver* driver, bool encode, int32_t numChan);
+DummyDriver* AL_GetDummyDriver(std::string);

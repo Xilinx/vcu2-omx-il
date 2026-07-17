@@ -695,7 +695,7 @@ bool DecModule::Empty(BufferHandleInterface* handle)
 static AL_TMetaData* CreatePixMapMeta(AL_TStreamSettings const& streamSettings, AL_EFbStorageMode storage, Resolution resolution)
 {
   auto picFormat = AL_GetDecPicFormat(streamSettings.eChroma, static_cast<uint8_t>(streamSettings.iBitDepth), storage, false, AL_PLANE_MODE_MAX_ENUM);
-  auto fourCC = AL_GetDecFourCC(picFormat);
+  auto fourCC = AL_GetDecFourCC(&picFormat);
   auto stride = resolution.stride.horizontal;
   auto sliceHeight = resolution.stride.vertical;
   auto meta = AL_PixMapMetaData_CreateEmpty(fourCC);

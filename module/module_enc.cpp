@@ -307,7 +307,7 @@ bool EncModule::DestroyEncoder()
 
   device->Deinit();
 
-  // Add Sleep for DeInit required in SrcSync mode
+  // Add Sleep for DeInit required in SrcSync mode (#6364)
   // required to allow v4l2src to complete EOL SrcSync signals to frame boundary
   Rtos_Sleep(40);
 
@@ -533,7 +533,7 @@ static AL_TMetaData* CreatePixMapMeta(shared_ptr<SettingsInterface> media)
   media->Get(SETTINGS_INDEX_FORMAT, &format);
 
   auto const picFormat = AL_EncGetSrcPicFormat(ConvertModuleToSoftChroma(format.color), static_cast<uint8_t>(format.bitdepth), ConvertModuleToSoftSrcStorage(format.storage));
-  auto fourCC = AL_EncGetSrcFourCC(picFormat);
+  auto fourCC = AL_GetEncFourCC(&picFormat);
   Resolution resolution;
   auto ret = media->Get(SETTINGS_INDEX_RESOLUTION, &resolution);
   assert(ret == SettingsInterface::SUCCESS);

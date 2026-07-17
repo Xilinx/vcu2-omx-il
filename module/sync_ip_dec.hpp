@@ -10,7 +10,7 @@
 
 extern "C"
 {
-#include <lib_common/IDriver.h>
+#include <lib_common/I_Communication.h>
 #include <lib_common/Allocator.h>
 }
 
@@ -31,4 +31,5 @@ private:
   std::shared_ptr<SyncIp> syncIp;
   std::shared_ptr<DecSyncChannel> syncChannel;
   std::shared_ptr<AL_TAllocator> allocator;
+  std::shared_ptr<AL_ICommunication> communication;
 };

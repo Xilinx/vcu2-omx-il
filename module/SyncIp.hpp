@@ -5,7 +5,7 @@
 
 extern "C"
 {
-#include "lib_common/I_Driver.h"
+#include "lib_common/I_Communication.h"
 #include "lib_common/BufferAPI.h"
 }
 
@@ -45,7 +45,7 @@ struct sync_no_buf_slot_available : public sync_error
 
 struct SyncIp
 {
-  SyncIp(AL_IDriver* driver, char const* device);
+  SyncIp(AL_ICommunication* driver, char const* device);
   ~SyncIp();
   int32_t getFreeChannel();
   void enableChannel(int32_t chanId);
@@ -64,13 +64,13 @@ struct SyncIp
 private:
   void getLatestChanStatus();
   void resetStatus(int32_t chanId);
-  int32_t fd = -1;
   bool quit = false;
   std::thread pollingThread;
   void pollingRoutine();
   void pollErrors(int32_t timeout);
 
-  AL_IDriver* driver;
+  AL_ICommunication* driver;
+  AL_HANDLE communication_line = NULL;
   std::mutex mutex {};
   std::vector<std::function<void(ChannelStatus &)>> eventListeners {};
   std::vector<ChannelStatus> channelStatuses {};

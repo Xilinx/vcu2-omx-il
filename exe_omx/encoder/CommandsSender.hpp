@@ -4,7 +4,7 @@
 #pragma once
 
 #include "ICommandsSender.hpp"
-#include "lib_encode/lib_encoder.h"
+#include "lib_encode/lib_encode.h"
 
 extern "C"
 {

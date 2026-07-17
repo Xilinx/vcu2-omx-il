@@ -35,19 +35,21 @@ EXTERNAL_LIB?=
 
 ifneq ($(EXTERNAL_SRC),)
 ifneq ($(MAKECMDGOALS), clean)
- include ${EXTERNAL_SRC}/config.mk
+include ${EXTERNAL_SRC}/config.mk
 else
- -include ${EXTERNAL_SRC}/config.mk
+-include ${EXTERNAL_SRC}/config.mk
 endif
 endif
 
+ifneq ($(EXTERNAL_SRC),)
 MAKEFLAGS+=-j1
 $(warning Parallelism is not supported when building with RISCV enabled. Consider adding -j1)
--include $(EXTERNAL_SRC)/riscv.mk
+-include ${EXTERNAL_SRC}/riscv.mk
+endif
 
 ENABLE_VCU?=1
 ifndef ENABLE_OMX_MCU
-	ENABLE_MICROBLAZE?=0
+ENABLE_MICROBLAZE?=0
 endif
 ENABLE_OMX_MCU?=${ENABLE_MICROBLAZE}
 ENABLE_64BIT?=1

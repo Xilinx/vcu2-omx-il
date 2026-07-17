@@ -26,7 +26,7 @@
 extern "C"
 {
 #include <lib_common/Allocator.h>
-#include <lib_encode/lib_encoder.h>
+#include <lib_encode/lib_encode.h>
 }
 
 struct LookAheadCallBackParam

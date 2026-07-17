@@ -1045,7 +1045,7 @@ bool EncSettingsAVC::Check()
 
   auto& channel = settings.tChParam[0];
   auto const picFormat = AL_EncGetSrcPicFormat(AL_GET_CHROMA_MODE(channel.ePicFormat), AL_GET_BITDEPTH(channel.ePicFormat), channel.eSrcMode);
-  auto fourCC = AL_EncGetSrcFourCC(picFormat);
+  auto fourCC = AL_GetEncFourCC(&picFormat);
   assert(AL_GET_BITDEPTH(channel.ePicFormat) == channel.uSrcBitDepth);
 
   if(AL_Settings_CheckCoherency(&settings, &channel, fourCC, stdout) < 0)
